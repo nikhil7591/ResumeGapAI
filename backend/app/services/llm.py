@@ -63,9 +63,6 @@ def score_and_extract_gaps(resume_text: str, jd_text: str, ideal_candidate_profi
         '  "weak_areas": [<string>, ...],        // areas present but underdeveloped, max 6\n'
         '  "strengths": [<string>, ...],         // areas where the resume clearly matches, max 6\n'
         '  "suggestions": [<string>, ...],       // concrete edits to improve the resume, max 6\n'
-        '  "ats_score": <integer 0-100>,         // likely ATS parsing/compatibility, based on '
-        "structure cues visible in the text (clear section headers, standard job-title/date "
-        "formatting, no evidence of tables/columns breaking up text)\n"
         '  "impact_score": <integer 0-100>,      // how much of the resume uses quantified, '
         "outcome-driven achievements (numbers, %, scale) versus vague duty statements\n"
         '  "summary": <string>                   // one or two sentence overall summary\n'
@@ -82,7 +79,6 @@ def score_and_extract_gaps(resume_text: str, jd_text: str, ideal_candidate_profi
         return max(0, min(100, int(result.get(key, 0))))
 
     result["match_score"] = _clamped_score("match_score")
-    result["ats_score"] = _clamped_score("ats_score")
     result["impact_score"] = _clamped_score("impact_score")
     result["gaps"] = list(result.get("gaps") or [])[:6]
     result["weak_areas"] = list(result.get("weak_areas") or [])[:6]
@@ -123,29 +119,29 @@ def judge_match_score(resume_text: str, jd_text: str, review: dict) -> int:
 def generate_interview_prep(resume_text: str, jd_text: str, gaps: list[str]) -> list[dict]:
     """Pro-only: generate five likely interview questions and answer outlines that draw on
     the candidate's actual resume content and the target job description."""
-    if not gaps:
-        return []
-
     system_prompt = (
         "You are an experienced interview coach. Generate EXACTLY 5 realistic interview "
         "questions a recruiter would ask, each paired with a short answer outline (2-4 "
         "sentences). Use the candidate's resume, the job description, and the listed gaps. "
-        "Prefer one item per gap, but if there are fewer than 5 gaps, invent additional "
-        "questions that are still clearly grounded in the job description and resume. For "
-        "each answer outline, suggest how the candidate could bridge the gap using related "
+        "If there are gaps, formulate questions around them. Also formulate questions around "
+        "the candidate's strengths relevant to the job description. For each answer outline, suggest "
+        "how the candidate could bridge any gap or highlight their strengths using related "
         "experience actually present in their resume. Respond ONLY with a JSON object of "
         "this exact shape:\n"
         "{\n"
         '  "items": [\n'
-        '    {"gap": <string>, "question": <string>, "answer_outline": <string>},\n'
+        '    {"gap": <string, use "N/A" if based on strength rather than a gap>, "question": <string>, "answer_outline": <string>},\n'
         "    ... exactly 5 total items ...\n"
         "  ]\n"
         "}"
     )
+    
+    gaps_text = "\n".join(f"- {g}" for g in gaps) if gaps else "None (Candidate is a strong match)"
+    
     user_prompt = (
         f"JOB DESCRIPTION:\n{jd_text}\n\n"
         f"CANDIDATE RESUME:\n{resume_text}\n\n"
-        f"GAPS:\n" + "\n".join(f"- {g}" for g in gaps)
+        f"GAPS:\n{gaps_text}"
     )
 
     result = _chat_json(settings.groq_model, system_prompt, user_prompt)

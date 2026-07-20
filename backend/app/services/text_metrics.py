@@ -66,3 +66,33 @@ def compute_keyword_match_score(resume_text: str, jd_text: str) -> int:
     matched = sum(1 for kw in top_keywords if kw in resume_lower)
 
     return round((matched / len(top_keywords)) * 100)
+
+
+def compute_ats_score(resume_text: str) -> int:
+    """Deterministic ATS score based on structural heuristics visible in the extracted text."""
+    score = 40
+    text_lower = resume_text.lower()
+
+    # Reward standard sections
+    sections = ["experience", "education", "skills", "summary", "projects", "work history", "objective"]
+    found_sections = sum(1 for sec in sections if re.search(r'\b' + sec + r'\b', text_lower))
+    score += min(found_sections * 5, 25)
+
+    # Reward contact info
+    if "@" in resume_text and "." in resume_text:
+        score += 10
+    
+    # Simple regex for US/International phone numbers
+    if re.search(r'\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}', resume_text) or re.search(r'\+\d{1,3}[-.\s]?\d{4,10}', resume_text):
+        score += 10
+        
+    # Word count heuristic (ATS prefers meaty resumes, but not too long)
+    word_count = len(resume_text.split())
+    if word_count > 200:
+        score += 15
+    elif word_count > 100:
+        score += 5
+    else:
+        score -= 20
+        
+    return max(0, min(100, score))

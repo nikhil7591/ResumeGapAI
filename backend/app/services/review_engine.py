@@ -4,7 +4,7 @@ from app.services.llm import (
     judge_match_score,
     generate_interview_prep,
 )
-from app.services.text_metrics import compute_readability_score, compute_keyword_match_score
+from app.services.text_metrics import compute_readability_score, compute_keyword_match_score, compute_ats_score
 
 
 def run_review_pipeline(resume_text: str, jd_text: str, is_pro: bool) -> dict:
@@ -24,6 +24,7 @@ def run_review_pipeline(resume_text: str, jd_text: str, is_pro: bool) -> dict:
 
     readability_score = compute_readability_score(resume_text)
     keyword_match_score = compute_keyword_match_score(resume_text, jd_text)
+    ats_score = compute_ats_score(resume_text)
 
     interview_prep: list[dict] = []
     if is_pro:
@@ -36,7 +37,7 @@ def run_review_pipeline(resume_text: str, jd_text: str, is_pro: bool) -> dict:
         "strengths": review["strengths"],
         "suggestions": review["suggestions"],
         "summary": review["summary"],
-        "ats_score": review["ats_score"],
+        "ats_score": ats_score,
         "impact_score": review["impact_score"],
         "readability_score": readability_score,
         "keyword_match_score": keyword_match_score,
