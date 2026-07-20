@@ -23,8 +23,12 @@ export function ReviewHistoryProvider({ children }: { children: ReactNode }) {
       setHistory([]);
       return;
     }
-    const data = await api.get<ReviewListItem[]>("/reviews");
-    setHistory(data);
+    try {
+      const data = await api.get<ReviewListItem[]>("/reviews");
+      setHistory(data);
+    } catch (err) {
+      setHistory([]);
+    }
   }, [user]);
 
   // History is per-user: refetch whenever auth state changes (login/logout), not just on mount.

@@ -23,9 +23,14 @@ export default function DashboardPage() {
 
   useEffect(() => {
     (async () => {
-      const data = await api.get<Usage>("/reviews/usage");
-      setUsage(data);
-      setLoadingUsage(false);
+      try {
+        const data = await api.get<Usage>("/reviews/usage");
+        setUsage(data);
+      } catch (err) {
+        // Ignored or handle gracefully
+      } finally {
+        setLoadingUsage(false);
+      }
     })();
   }, []);
 
