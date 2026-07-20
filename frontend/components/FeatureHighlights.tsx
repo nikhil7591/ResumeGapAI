@@ -31,7 +31,7 @@ const features = [
 
 export default function FeatureHighlights() {
   return (
-    <section id="features" className="mx-auto max-w-6xl px-6 py-20">
+    <section id="features" className="mx-auto max-w-[88rem] px-6 py-20">
       <h2 className="text-center text-3xl font-bold text-gray-900 dark:text-gray-50">
         Built for interview prep, not just keyword matching
       </h2>

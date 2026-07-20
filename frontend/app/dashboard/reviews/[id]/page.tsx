@@ -56,7 +56,9 @@ export default function ReviewDetailPage() {
           <details className="group rounded-xl border border-gray-200 bg-white p-6 text-sm text-gray-600 shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400">
             <summary className="flex cursor-pointer list-none items-center justify-between font-semibold text-gray-900 dark:text-gray-100">
               Job description
-              <span className="text-gray-400 transition-transform group-open:rotate-45">+</span>
+              <span className="rounded-full border border-gray-300 px-3 py-1 text-xs font-semibold text-gray-500 transition-colors group-open:border-brand-300 group-open:text-brand-600 dark:border-gray-700 dark:text-gray-400 dark:group-open:border-brand-700 dark:group-open:text-brand-300">
+                Read JD
+              </span>
             </summary>
             <p className="mt-3 whitespace-pre-wrap">{review.jd_text}</p>
           </details>

@@ -27,7 +27,7 @@ def run_review_pipeline(resume_text: str, jd_text: str, is_pro: bool) -> dict:
 
     interview_prep: list[dict] = []
     if is_pro:
-        interview_prep = generate_interview_prep(resume_text, review["gaps"])
+        interview_prep = generate_interview_prep(resume_text, jd_text, review["gaps"])
 
     return {
         "match_score": review["match_score"],

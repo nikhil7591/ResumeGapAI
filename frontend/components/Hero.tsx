@@ -14,7 +14,7 @@ export default function Hero() {
 
   return (
     <section className="overflow-hidden bg-gradient-to-b from-brand-50 to-white dark:from-gray-900 dark:to-gray-950">
-      <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-6 py-20 lg:grid-cols-2 lg:py-28">
+      <div className="mx-auto grid max-w-[88rem] grid-cols-1 items-center gap-12 px-6 py-20 lg:grid-cols-2 lg:py-28">
         {/* Left: copy */}
         <div>
           <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-100 px-4 py-1 text-sm font-semibold text-brand-700 dark:bg-brand-900/40 dark:text-brand-300">

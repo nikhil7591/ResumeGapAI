@@ -120,27 +120,33 @@ def judge_match_score(resume_text: str, jd_text: str, review: dict) -> int:
         return review["match_score"]
 
 
-def generate_interview_prep(resume_text: str, gaps: list[str]) -> list[dict]:
-    """Pro-only: for each gap, generate one likely interview question and an answer outline
-    that draws on the candidate's actual resume content."""
+def generate_interview_prep(resume_text: str, jd_text: str, gaps: list[str]) -> list[dict]:
+    """Pro-only: generate five likely interview questions and answer outlines that draw on
+    the candidate's actual resume content and the target job description."""
     if not gaps:
         return []
 
     system_prompt = (
-        "You are an experienced interview coach. For each 'gap' (a missing skill/experience "
-        "area between a candidate's resume and a job description), write ONE realistic "
-        "interview question a recruiter would ask that probes this gap, and ONE short answer "
-        "outline (2-4 sentences) suggesting how the candidate could bridge the gap using "
-        "related experience actually present in their resume. Respond ONLY with a JSON object "
-        "of this exact shape:\n"
+        "You are an experienced interview coach. Generate EXACTLY 5 realistic interview "
+        "questions a recruiter would ask, each paired with a short answer outline (2-4 "
+        "sentences). Use the candidate's resume, the job description, and the listed gaps. "
+        "Prefer one item per gap, but if there are fewer than 5 gaps, invent additional "
+        "questions that are still clearly grounded in the job description and resume. For "
+        "each answer outline, suggest how the candidate could bridge the gap using related "
+        "experience actually present in their resume. Respond ONLY with a JSON object of "
+        "this exact shape:\n"
         "{\n"
         '  "items": [\n'
         '    {"gap": <string>, "question": <string>, "answer_outline": <string>},\n'
-        "    ...\n"
+        "    ... exactly 5 total items ...\n"
         "  ]\n"
         "}"
     )
-    user_prompt = f"CANDIDATE RESUME:\n{resume_text}\n\nGAPS:\n" + "\n".join(f"- {g}" for g in gaps)
+    user_prompt = (
+        f"JOB DESCRIPTION:\n{jd_text}\n\n"
+        f"CANDIDATE RESUME:\n{resume_text}\n\n"
+        f"GAPS:\n" + "\n".join(f"- {g}" for g in gaps)
+    )
 
     result = _chat_json(settings.groq_model, system_prompt, user_prompt)
     items = result.get("items") or []
@@ -151,4 +157,4 @@ def generate_interview_prep(resume_text: str, gaps: list[str]) -> list[dict]:
         answer_outline = str(item.get("answer_outline") or "").strip()
         if gap and question and answer_outline:
             cleaned.append({"gap": gap, "question": question, "answer_outline": answer_outline})
-    return cleaned
+    return cleaned[:5]

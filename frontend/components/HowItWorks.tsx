@@ -11,7 +11,7 @@ export default function HowItWorks() {
       id="how-it-works"
       className="border-y border-gray-100 bg-gray-50 py-20 dark:border-gray-800 dark:bg-gray-900/40"
     >
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="mx-auto max-w-[88rem] px-6">
         <h2 className="text-center text-3xl font-bold text-gray-900 dark:text-gray-50">
           How <span className="text-brand-600">ResumeGapAI</span> Works
         </h2>

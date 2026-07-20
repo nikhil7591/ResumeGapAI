@@ -8,7 +8,7 @@ const benefits = [
 export default function BenefitsBand() {
   return (
     <section className="bg-brand-50/60 py-16 dark:bg-gray-900/60">
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="mx-auto max-w-[88rem] px-6">
         <h2 className="text-center text-2xl font-bold text-gray-900 dark:text-gray-50">
           Why Job Seekers Choose <span className="text-brand-600">ResumeGapAI</span>
         </h2>
