@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* Blocking script: sets the `dark` class before first paint to avoid a flash of
-            the wrong theme. Reads localStorage, falls back to the OS color-scheme. */}
+            the wrong theme. Reads localStorage and otherwise defaults to light mode. */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body

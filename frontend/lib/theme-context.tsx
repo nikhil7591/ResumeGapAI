@@ -47,8 +47,7 @@ export const themeInitScript = `
 (function () {
   try {
     var stored = window.localStorage.getItem('theme');
-    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var theme = stored || (prefersDark ? 'dark' : 'light');
+    var theme = stored || 'light';
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
     }
