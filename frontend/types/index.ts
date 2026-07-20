@@ -5,6 +5,7 @@ export interface User {
   email: string;
   plan: Plan;
   subscription_status: string | null;
+  access_token?: string;
 }
 
 export interface InterviewPrepItem {

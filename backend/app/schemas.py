@@ -22,6 +22,7 @@ class UserOut(BaseModel):
     email: EmailStr
     plan: str
     subscription_status: Optional[str] = None
+    access_token: Optional[str] = None
 
     model_config = {"from_attributes": True}
 

@@ -62,6 +62,9 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
       ...(options.body && !(options.body instanceof FormData)
         ? { "Content-Type": "application/json" }
         : {}),
+      ...(typeof window !== "undefined" && localStorage.getItem("access_token")
+        ? { Authorization: `Bearer ${localStorage.getItem("access_token")}` }
+        : {}),
       ...options.headers,
     },
   });

@@ -24,6 +24,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const me = await api.get<User>("/auth/me");
       setUser(me);
     } catch {
+      if (typeof window !== "undefined") localStorage.removeItem("access_token");
       setUser(null);
     }
   }, []);
@@ -37,16 +38,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signup = useCallback(async (email: string, password: string) => {
     const created = await api.post<User>("/auth/signup", { email, password });
+    if (created.access_token) {
+      if (typeof window !== "undefined") localStorage.setItem("access_token", created.access_token);
+    }
     setUser(created);
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
     const loggedIn = await api.post<User>("/auth/login", { email, password });
+    if (loggedIn.access_token) {
+      if (typeof window !== "undefined") localStorage.setItem("access_token", loggedIn.access_token);
+    }
     setUser(loggedIn);
   }, []);
 
   const logout = useCallback(async () => {
     await api.post("/auth/logout");
+    if (typeof window !== "undefined") localStorage.removeItem("access_token");
     setUser(null);
   }, []);
 
